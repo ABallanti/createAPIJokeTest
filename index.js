@@ -20,19 +20,46 @@ app.get('/random',(req,res)=>{
 //2. GET a specific joke
 app.get('/jokes/:id',(req,res)=>{
     const id = parseInt(req.params.id)-1
-    if (isNaN(id) || id >100 || id <0)
-        res.status(400).send("error, id must be numeric between 1 and 100")
+    if (isNaN(id) || id >100 || id <0) {
+        console.log("test");
+        res.status(400).send("error, id must be numeric between 1 and 100");
+    }
     else
-        res.json(jokes[id])
+        res.json(jokes[id]);
 });
 
 //3. GET a jokes by filtering on the joke type
 app.get('/filter',(req,res)=>{
     const typeChosen = req.query.type;
-    res.json(jokes.filter(joke => joke.jokeType === typeChosen));
+    res.json(jokes.filter(objectJoke => objectJoke.jokeType === typeChosen));
 });
 
 //4. POST a new joke
+app.post('/jokes',(req,res)=>{
+
+    const newJokeText = req.body.text;
+    const newJokeType = req.body.type;
+
+    const newJoke = {
+        id: jokes.length+ 1,
+        jokeText: newJokeText,
+        jokeType: newJokeType,
+    }
+
+    console.log(req.body.text)
+
+    if (!newJokeText || !newJokeType)
+        {
+        res.status(400).send("Jokes needs text and type")
+        }
+
+    else{
+        console.log("ready to input")
+        jokes.push(newJoke)
+        res.status(200).send(newJoke)
+        }
+
+})
 
 //5. PUT a joke
 
