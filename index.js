@@ -37,18 +37,15 @@ app.get('/filter',(req,res)=>{
 //4. POST a new joke
 app.post('/jokes',(req,res)=>{
 
-    const newJokeText = req.body.text;
-    const newJokeType = req.body.type;
-
     const newJoke = {
         id: jokes.length+ 1,
-        jokeText: newJokeText,
-        jokeType: newJokeType,
+        jokeText: req.body.text,
+        jokeType: req.body.type,
     }
 
     console.log(req.body.text)
 
-    if (!newJokeText || !newJokeType)
+    if (!newJoke)
         {
         res.status(400).send("Jokes needs text and type")
         }
@@ -56,14 +53,50 @@ app.post('/jokes',(req,res)=>{
     else{
         console.log("ready to input")
         jokes.push(newJoke)
-        res.status(200).send(newJoke)
+        res.status(200)
+        res.json(newJoke)
         }
-
 })
 
 //5. PUT a joke
+app.put("/jokes/:id",(req,res) =>{
+
+    const putid = parseInt (req.params.id);
+
+    const updatedJoke = {
+        id: putid,
+        jokeText: req.body.text,
+        jokeType: req.body.type,
+    }
+
+    const searchIndex = jokes.findIndex((singlejoke) => singlejoke.id === putid)
+
+    if (!putid){
+        res.status(404).send("You need an id");
+    }
+
+    else{
+        jokes[searchIndex]=updatedJoke;
+        res.send(updatedJoke);
+    }
+
+})
 
 //6. PATCH a joke
+app.patch("/jokes/:id", (req,res) =>{
+
+    const putid = parseInt (req.params.id)
+    const searchIndex = jokes.findIndex((singlejoke) => singlejoke.id === putid)
+
+    if (searchIndex === -1){
+            res.status(404).send("Id not found")
+    }
+    else{
+        jokes[searchIndex].jokeType = req.body.type;
+        res.send(jokes[searchIndex])
+    }
+
+})
 
 //7. DELETE Specific joke
 
