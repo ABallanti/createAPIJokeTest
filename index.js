@@ -94,16 +94,15 @@ app.patch("/jokes/:id", (req, res) => {
 
 //7. DELETE Specific joke
 
-app.delete("/jokes/:id", (req,res) => {
+app.delete("/jokes/:id", (req, res) => {
 
     const deleteid = parseInt(req.params.id);
     const searchIndex = jokes.findIndex((singlejoke) => singlejoke.id === deleteid);
 
     if (searchIndex > -1) {
-      jokes.splice(searchIndex,1);
-      res.send("Ok")
-    }
-    else{
+        jokes.splice(searchIndex, 1);
+        res.send("Ok")
+    } else {
         res
             .status(404).send("Id not found")
             .json({error: `Joke with id ${deleteid} was not found`})
@@ -117,11 +116,11 @@ app.delete("/all", (req, res) => {
     const keyuser = req.query.apiKey;
     if (keyuser === masterKey) {
         jokes = [];
-        res.send("Jokes deleted")
-    }
-
-    else{
-        res.status(403).send("Wrong key, action prohibited");
+        res.status(200).send("Jokes deleted")
+    } else {
+        res
+            .status(403)
+            .json({error: "you are not authorised"})
     }
 
 })
