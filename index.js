@@ -99,7 +99,7 @@ app.delete("/jokes/:id", (req,res) => {
     const deleteid = parseInt(req.params.id);
     const searchIndex = jokes.findIndex((singlejoke) => singlejoke.id === deleteid);
 
-    if (searchIndex !== -1) {
+    if (searchIndex > -1) {
       jokes.splice(searchIndex,1);
       res.send("Ok")
     }
@@ -112,6 +112,20 @@ app.delete("/jokes/:id", (req,res) => {
 })
 
 //8. DELETE All jokes
+app.delete("/all", (req, res) => {
+
+    const keyuser = req.query.apiKey;
+    if (keyuser === masterKey) {
+        jokes = [];
+        res.send("Jokes deleted")
+    }
+
+    else{
+        res.status(403).send("Wrong key, action prohibited");
+    }
+
+})
+
 
 app.listen(port, () => {
     console.log(`Successfully started server on port http://localhost:${port}/`);
